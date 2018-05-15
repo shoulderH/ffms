@@ -1,0 +1,156 @@
+@charset "utf-8";
+/* CSS Document */
+
+.cwyun-topology-page {  }
+
+.cwyun-topology-page .lead .lead-title { font-size:14px; color:#444; margin-right:8px; }
+.cwyun-topology-page .lead .lead-title { font-size:16px; }
+.cwyun-topology-page .lead a.lead-title:hover { color:#1983da; text-decoration:underline }
+.cwyun-topology-page .lead .lead-sub-title { width: auto; max-width: 250px; vertical-align: top; margin-left:8px; font-size:14px; color:#444; font-weight:bold; }
+
+.topology-headbtn { float:right; line-height:18px; margin:10px 20px; display: none;}
+.topology-box { margin:-20px; background:url("../img/topo/topology-bg.png") repeat; }
+.topology-operating-box { overflow:hidden; padding-left:10px; background:#fff; border-radius:0 0 3px 3px; border-top:1px solid #d0daf3; }
+
+
+.topology-operating-box ul { overflow:hidden; float:left; padding:5px 0; }
+.topology-operating-box li { list-style: none; }
+.topology-operating-box li.btn-li { float:left; margin-right:10px; }
+.topology-operating-box li.btn-li.line:before { content:" "; float:left; height:24px; margin:3px 10px 0 0; border-left:1px solid #e6edfa; }
+
+.topology-operating-box li.btn-li a { width:30px; height:30px; padding:0; margin:0; line-height:26px; }
+.topology-operating-box li.btn-li a.btn-default { width:auto; min-width:30px; border:1px solid #4199ef; color:#4199ef; background:#fff; border-radius:2px; }
+.topology-operating-box li.btn-li:first-child a.btn-default { padding-right:8px; }
+.topology-operating-box li.btn-li a.btn-default:hover { background:#efefef; }
+
+.topo-pane {padding: 20px; background: #fff}
+
+.contextmenu {
+    border: 1px solid #aaa;
+    border-bottom: 0;
+    background: #eee;
+    position: absolute;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: none;
+}
+
+.contextmenu li a {
+    text-decoration: none;
+    color: black;
+    display: block;
+    padding: 10px;
+    border-bottom: 1px solid #aaa;
+    cursor: pointer;
+}
+
+.contextmenu li a:hover {
+    background: #fff;
+}
+
+/*工具栏选中样式*/
+.topology-operating-box .btn.selected{
+    color: #fff;
+    background-color: #286090;
+    border-color: #204d74;
+}
+.topology-headbtn label {
+    float: left;
+    height: 30px;
+    line-height: 28px;
+    /*font-family: 宋体;*/
+    font-size: 14px;
+    color: rgb(50, 50, 50);
+    /*font-weight: bold;*/
+    margin: 0px 15px 0px 0px;
+}
+.switchRadio {
+    display: inline-block;
+    margin-top: -3px;
+    width: 48px;
+    height: 24px;
+    cursor: pointer;
+    vertical-align: middle;
+    border-radius: 12px;
+    background: rgb(212, 226, 250);
+    transition: all 0.15s;
+}
+.switchRadio.on {
+    background: rgb(25, 131, 218);
+}
+.switchRadio em {
+    display: block;
+    margin-top: 2px;
+    margin-left: 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    background: rgb(255, 255, 255);
+    transition: all 0.3s;
+}
+.switchRadio.on em {
+    margin-left: calc(100% - 22px);
+}
+.countdown {
+    display: inline-block;
+    position: relative;
+    margin-top: -3px;
+    width: 36px;
+    height: 36px;
+    vertical-align: middle;
+    border-radius: 18px;
+    overflow: hidden;
+}
+.countdown::after {
+    content: "";
+    display: block;
+    width: 36px;
+    height: 36px;
+    background: url(../img/topo/loading.png) no-repeat;
+    animation: loadingRadio 60s linear infinite;
+}
+@keyframes loadingRadio {
+    0 {
+        transform: rotate(0);
+    }
+    25% {
+        transform: rotate(90deg);
+    }
+    50% {
+        transform: rotate(180deg);
+    }
+    75% {
+        transform: rotate(270deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+.countdown em {
+    display: block;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    line-height: 36px;
+    font-family: 宋体;
+    font-size: 14px;
+    color: rgb(54, 116, 222);
+    font-weight: bold;
+    font-style: normal;
+    text-align: center;
+    z-index: 1;
+}
+.topology-headbtn label .refreshTime {
+    margin-left: 12px;
+    font-weight: normal;
+}
+
+.page-intro {
+    overflow: hidden;
+    background: #fff;
+    border-radius: 3px 3px 0 0;
+    border-bottom: 1px solid #d0daf3;
+}

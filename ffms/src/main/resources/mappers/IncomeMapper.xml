@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.finance.dao.IncomeDao">
+<resultMap type="Income" id="Income">
+		<result property="id" column="id" />
+		<result property="incomer" column="incomer" />
+		<result property="source" column="source" />
+		<result property="money" column="money" />
+		<result property="incometime" column="incometime" />
+	</resultMap>
+	<select id="getIncomeLine" parameterType="Map" resultMap="Income">
+		select * from t_income 
+		<where>
+			<if test="incomer!=null and incomer!='' ">
+				and incomer like #{incomer}
+			</if>
+			<if test="starttime!=null and starttime!='' ">
+				and incometime&gt;=#{starttime}
+			</if>
+			<if test="endtime!=null and endtime!='' ">
+				and incometime&lt;=#{endtime}
+			</if>
+			order by incometime
+		</where>
+	</select>
+	<!--获取该用户收入的所有类型  -->
+	<select id="getSourceType" parameterType="Map" resultType="java.lang.String">
+		select distinct(source) from t_income
+		<where>
+			<if test="incomer!=null and incomer!='' ">
+				and incomer like #{incomer}
+			</if>
+			<if test="starttime!=null and starttime!='' ">
+				and incometime&gt;=#{starttime}
+			</if>
+			<if test="endtime!=null and endtime!='' ">
+				and incometime&lt;=#{endtime}
+			</if>
+		</where> 
+	</select>
+	 <select id="findIncome" parameterType="Map" resultMap="Income">
+		select * from t_income 
+		<where>
+			<if test="incomer!=null and incomer!='' ">
+				and incomer like #{incomer}
+			</if>
+			<if test="source!=null and source!='' ">
+				and source like #{source}
+			</if>
+			<if test="incometime!=null and incometime!=''">
+				and incometime=#{incometime}
+			</if>
+			<if test="starttime!=null and starttime!='' ">
+				and incometime&gt;=#{starttime}
+			</if>
+			<if test="endtime!=null and endtime!='' ">
+				and incometime&lt;=#{endtime}
+			</if>
+		
+		</where>
+		<if test="start!=null and size!=null">
+			limit #{start},#{size}
+		</if>
+	</select>
+	<delete id="deleteIncome" parameterType="Income">
+		delete from t_income where incomer=#{incomer} and incometime=#{incometime};
+	</delete>
+	
+		<insert id="addIncome" parameterType="Income">
+		insert into t_income(id,incomer,source,money,incometime) values(null,#{incomer},#{source},#{money},#{incometime});
+	</insert>
+	<select id="getIncomer" resultMap="Income">
+		select distinct(incomer) from t_income
+	</select>
+<!--  	<update id="updateIncome" parameterType="Income">
+		update t_income
+		<set>
+			<if test="source!=null and source!='' ">
+				source=#{source},
+			</if>
+			<if test="money!=null and money!='' ">
+				money=#{money},
+			</if>
+			<if test="incometime!=null and incometime!='' ">
+				incometime=#{incometime},
+			</if>
+		</set>
+		where incomer=#{incomer} and incometime=#{incometime}
+	</update>  -->
+	
+<!--
+	<select id="getTotalIncome" parameterType="Map" resultType="Long">
+		select count(*) from t_income a,t_datadic b,t_user c,t_user_role d
+		<where>
+			a.dataid=b.id and a.userid=c.id and a.userid=d.userid
+			<if test="incomer!=null and incomer!='' ">
+				and a.incomer like #{incomer}
+			</if>
+			<if test="source!=null and source!='' ">
+				and a.source like #{source}
+			</if>
+			<if test="dataid!=null and dataid!='' ">
+				and a.dataid like #{dataid}
+			</if>
+			<if test="starttime!=null and starttime!='' ">
+				and a.incometime&gt;=#{starttime}
+			</if>
+			<if test="endtime!=null and endtime!='' ">
+				and a.incometime&lt;=#{endtime}
+			</if>
+			<if test="userid!=null and roleid!=1">
+				and a.userid=#{userid}
+			</if>
+		</where>
+	</select>
+ -->
+</mapper>

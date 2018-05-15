@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.finance.dao.TradeDao">
+	<resultMap type="Trade" id="Trade">
+		<result property="tradeid" column="tradeid" />
+		<result property="securityid" column="securityid" />
+		<result property="price" column="price" />
+		<result property="number" column="number" />
+		<result property="money" column="money" />
+		<result property="source" column="source" />
+		<result property="tradetime" column="tradetime" />
+	</resultMap>
+<update id="updateTrade" parameterType="Trade">
+		update t_trade
+		<set>
+		    <if test="securityid!=null and securityid!='' ">
+				securityid=#{securityid},
+			</if>
+			<if test="price!=null and price!='' ">
+				price=#{price},
+			</if>
+			<if test="number!=null and number!='' ">
+				number=#{number},
+			</if>
+			<if test="money!=null and money!='' ">
+				money=#{money},
+			</if>
+			<if test="source!=null and source!='' ">
+				source=#{source},
+			</if>
+			<if test="tradetime!=null and tradetime!='' ">
+				tradetime=#{tradetime},
+			</if>
+		</set>
+		where tradeid=#{tradeid}
+	</update>
+	
+	<select id="findTradeBySecurityId" parameterType="Map" resultMap="Trade">
+		select * from t_trade 
+		<where>
+			<if test="securityid!=null and securityid!='' ">
+					and securityid=#{securityid}
+			</if>
+			<if test="source!=null and source!='' ">
+				and source&lt;=#{source}
+			</if>
+			<if test="starttime!=null and starttime!='' ">
+				and tradetime&gt;=#{starttime}
+			</if>
+			<if test="endtime!=null and endtime!='' ">
+				and tradetime&lt;=#{endtime}
+			</if>
+			<if test="start!=null and size!=null">
+			limit #{start},#{size}
+			</if>
+			
+		</where>
+	</select>
+ 	<delete id="deleteTrade" parameterType="Integer">
+		delete from t_trade where
+		tradeid=#{tradeid};
+	</delete>
+	<insert id="addTrade" parameterType="Trade">
+		insert into t_trade
+		values(null,#{securityid},#{price},#{number},#{money},#{source},#{tradetime});
+	</insert>
+	
+	
+	
+<!-- 
+	<select id="getTotalTrade" parameterType="Map" resultType="Long">
+		select count(*) from t_trade a,t_datadic b,t_user c,t_shares
+		d,t_user_role f
+		<where>
+			a.dataid=b.id and a.userid=c.id and a.sharesid=d.id and
+			a.userid=f.userid
+			<if test="dataid!=null and dataid!='' ">
+				and a.dataid like #{dataid}
+			</if>
+			<if test="starttime!=null and starttime!='' ">
+				and a.time&gt;=#{starttime}
+			</if>
+			<if test="endtime!=null and endtime!='' ">
+				and a.time&lt;=#{endtime}
+			</if>
+			<if test="userid!=null and roleid!=1">
+				and a.userid=#{userid}
+			</if>
+		</where>
+	</select>
+
+	
+
+	
+
+	 -->
+</mapper>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.finance.dao.PayDao">
+		<resultMap type="Pay" id="Pay">
+		<result property="id" column="id" />
+		<result property="payer" column="payer" />
+		<result property="source" column="source" />
+		<result property="money" column="money" />
+		<result property="paytime" column="paytime" />
+	</resultMap>
+      <select id="getPayLine" parameterType="Map" resultMap="Pay">
+		select * from t_pay 
+		<where>
+			<if test="payer!=null and payer!='' ">
+				 payer like #{payer}
+			</if>
+			<if test="starttime!=null and starttime!='' ">
+				and paytime&gt;=#{starttime}
+			</if>
+			<if test="endtime!=null and endtime!='' ">
+				and paytime&lt;=#{endtime}
+			</if>
+			order by paytime
+		</where>
+	</select> 
+		<!--获取该用户支出的所有类型  -->
+	<select id="getSourceType" parameterType="Map" resultType="java.lang.String">
+		select distinct(source) from t_pay 
+		<where>
+			<if test="payer!=null and payer!='' ">
+				 payer like #{payer}
+			</if>
+			<if test="starttime!=null and starttime!='' ">
+				and paytime&gt;=#{starttime}
+			</if>
+			<if test="endtime!=null and endtime!='' ">
+				and paytime&lt;=#{endtime}
+			</if>
+		</where>
+	</select>
+	 <select id="findPay" parameterType="Map" resultMap="Pay">
+		select * from t_pay 
+		<where>
+			<if test="payer!=null and payer!='' ">
+				and payer like #{payer}
+			</if>
+			<if test="source!=null and source!='' ">
+				and source like #{source}
+			</if>
+			<if test="paytime!=null and paytime!=''">
+				and paytime=#{paytime}
+			</if>
+			<if test="starttime!=null and starttime!='' ">
+				and paytime&gt;=#{starttime}
+			</if>
+			<if test="endtime!=null and endtime!='' ">
+				and paytime&lt;=#{endtime}
+			</if>
+		
+		</where>
+		<if test="start!=null and size!=null">
+			limit #{start},#{size}
+		</if>
+	</select>
+	<delete id="deletePay" parameterType="Pay">
+		delete from t_pay where payer=#{payer} and paytime=#{paytime};
+	</delete>
+	
+		<insert id="addPay" parameterType="Pay">
+		insert into t_pay(id,payer,source,money,paytime) values(null,#{payer},#{source},#{money},#{paytime});
+	</insert>
+	<select id="getPayer" resultMap="Pay">
+		select distinct(payer) from t_pay
+	</select>
+	<select id="getTime" resultType="java.lang.String">
+		SELECT DISTINCT DATE_FORMAT(paytime,'%Y-%m-%d') AS time FROM t_pay ORDER BY paytime;
+	</select>
+</mapper>

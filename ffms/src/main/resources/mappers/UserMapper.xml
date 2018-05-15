@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.finance.dao.UserDao">
+	<resultMap type="User" id="User">
+		<result property="username" column="username" />
+		<result property="password" column="password" />
+		<result property="truename" column="truename" />
+		<result property="email" column="email" />
+		<result property="province" column="province" />
+		<result property="city" column="city" />
+		<result property="county" column="county" />
+		<result property="sex" column="sex" />
+		<result property="appellation" column="appellation" />
+		<result property="manageid" column="manageid" />
+		<result property="isvalid" column="isvalid" />
+	</resultMap>
+	<!-- 返回是否有该用户名，若有输出返回所有的数据 -->
+	<select id="getUserByName" resultType="User">
+        SELECT *
+        FROM t_user
+        WHERE username=#{username}   
+     </select>  
+    <!--是否有该用户  -->
+	<select id="getUserIsExists" parameterType="User" resultType="boolean">
+		select count(1) from t_user
+		where username = #{username}
+	</select>
+	<!-- 注册用户 -->
+	<insert id="addSign" parameterType="User">
+		insert into t_user values(#{username},#{password},null,null,#{province},#{city},#{county},#{sex},null,null,null);
+	</insert>
+	<!--添加用户  -->
+	<insert id="addUser" parameterType="User">
+		insert into t_user values(#{username},#{password},#{truename},
+			#{email},#{province},#{city},#{county},#{sex},
+			#{appellation},#{manageid},#{isvalid})
+	</insert>
+	<!-- 更改用户信息 -->
+	<update id="updateUser" parameterType="User" >
+		update t_user 
+		<set>
+			<if test="password!=null and password!='' ">
+				password=#{password},
+			</if>
+			<if test="truename!=null and truename!='' ">
+				truename=#{truename},
+			</if>
+			<if test="email!=null and email!='' ">
+				email=#{email},
+			</if>
+			<if test="province!=null and province!='' ">
+				province=#{province},
+			</if>
+			<if test="city!=null and city!='' ">
+				city=#{city},
+			</if>
+			<if test="county!=null and county!='' ">
+				county=#{county},
+			</if>
+			<if test="sex!=null and sex!='' ">
+				sex=#{sex},
+			</if>
+			
+			<if test="appellation!=null and appellation!='' ">
+				appellation=#{appellation},
+			</if>
+			<if test="manageid!=null and manageid!='' ">
+				manageid=#{manageid},
+			</if>
+			
+		</set>
+		where username=#{username}
+	</update>
+		<!--根据条件输出所有满足条件的用户信息-->
+		<select id="findUser" parameterType="Map" resultMap="User">
+		select * from t_user  
+		<where>
+			<!-- appellation unlike '管理员' -->
+		    <if test="username!=null and username!='' ">
+				and username like #{username}
+			</if>
+			<if test="truename!=null and truename!='' ">
+				and truename like #{truename}
+			</if>
+			<if test="appellation!=null and appellation!='' ">
+				and appellation like #{appellation}
+			</if>
+			<if test="sex!=null and sex!='' ">
+				and sex = #{sex}
+			</if>
+			<if test="email!=null and email!='' ">
+				and email like #{email}
+			</if>
+			<if test="province!=null and province!='' ">
+				and province like #{province}
+			</if>
+			<if test="manageid!=null and manageid!='' ">
+				and manageid = #{manageid}
+			</if>
+		</where>
+	 	<if test="start!=null and size!=null">
+			limit #{start},#{size}
+		</if> 
+	</select>
+	
+	<select id="getCounts" parameterType="Map" resultType="Integer">
+		select count(*) from t_user 
+		<where>
+		    <if test="manageid!=null and manageid!='' ">
+				and manageid like #{manageid }
+			</if>
+		</where>
+	</select>
+	<!-- 根据用户名删除用户信息 -->
+	<delete id="deleteUser" parameterType="String">
+	    delete from t_user  where username=#{username};
+	</delete>
+	
+	<!-- 
+	系统管理员部分
+	 -->
+	 <!-- 搜索管理员 -->
+	<select id="findManage" parameterType="Map" resultMap="User">
+		select * from t_user  
+		<where>
+		    and appellation like '管理员'
+		    and manageid!=0
+		    <if test="username!=null and username!='' ">
+				and username like #{username}
+			</if>
+			<if test="truename!=null and truename!='' ">
+				and truename like #{truename}
+			</if>
+			<if test="sex!=null and sex!='' ">
+				and sex = #{sex}
+			</if>
+			<if test="email!=null and email!='' ">
+				and email like #{email}
+			</if>
+		</where>
+	 	<if test="start!=null and size!=null">
+			limit #{start},#{size}
+		</if> 
+	</select>
+	<!--获取最大的管理员号  -->
+	<select id="getMaxManageID"  resultType="Integer">
+		select MAX(manageid) AS maxid from t_user 
+	</select>
+	<!--添加管理员  -->
+	<insert id="addManage" parameterType="User">
+		insert into t_user values(#{username},#{password},#{truename},#{email},null,null,null,#{sex},#{appellation},#{manageid},null);
+	</insert>
+	<!-- 根据管理员号搜索家庭成员的称谓和用户名 -->
+	<select id="getRelation" parameterType="Integer" resultMap="User">
+		select * from t_user where manageid=#{manageid}
+	</select>
+	<!-- 查询出存在的所有省份 -->
+	<select id="getProvince" resultType="java.lang.String">
+		select distinct(province) from t_user where province!=''
+	</select>
+</mapper>

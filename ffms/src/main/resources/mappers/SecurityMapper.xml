@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.finance.dao.SecurityDao">
+	<resultMap type="Security" id="Security">
+		<result property="id" column="id" />
+		<result property="securitynumber" column="securitynumber" />
+		<result property="securitypassword" column="securitypassword" />
+		<result property="username" column="username" />
+	</resultMap>
+	 <select id="findSecurity" parameterType="Map" resultMap="Security">
+		select * from t_security 
+		<where>
+			<if test="securitynumber!=null and securitynumber!='' ">
+				and securitynumber like #{securitynumber}
+			</if>
+			<if test="securitypassword!=null and securitypassword!='' ">
+				and securitypassword like #{securitypassword}
+			</if>
+			<if test="username!=null and username!=''">
+				and username like #{username}
+			</if>
+		</where>
+	</select>
+	<delete id="deleteSecurity" parameterType="Security">
+		delete from t_security where securitynumber=#{securitynumber} 
+		and securitypassword=#{securitypassword} and username=#{username};
+	</delete>
+	
+	<insert id="addSecurity" parameterType="Security">
+		insert into t_security(id,securitynumber,securitypassword,username) 
+		values(null,#{securitynumber},#{securitypassword},#{username});
+	</insert>
+	<select id="getIsExistSecurity" parameterType="Security" resultType="boolean">
+		select count(1) from t_security
+		where securitynumber=#{securitynumber} and username = #{username}
+	</select>
+</mapper>
